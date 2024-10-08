@@ -2,36 +2,29 @@ import React, { useEffect, useRef } from 'react';
 import Hls from 'hls.js';
 
 const HLSPlayer = ({ src, autoPlay = false, controls = true, width = '100%', height = 'auto' }) => {
-  const videoRef = useRef(null);
+  const audioRef = useRef(null);
 
   useEffect(() => {
-    const video = videoRef.current;
+    const audio = audioRef.current;
     if (Hls.isSupported()) {
       const hls = new Hls();
       hls.loadSource(src);
-      hls.attachMedia(video);
+      hls.attachMedia(audio);
       
       hls.on(Hls.Events.MANIFEST_PARSED, () => {
         if (autoPlay) {
-          video.play();
+          audio.play();
         }
       });
       
       return () => {
         hls.destroy();
       };
-    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      video.src = src;
-      video.addEventListener('loadedmetadata', () => {
-        if (autoPlay) {
-          video.play();
-        }
-      });
     }
   }, [src, autoPlay]);
 
   return (
-    <video ref={videoRef} controls={controls} width={width} height={height} />
+    <audio ref={audioRef} controls={controls} width={width} height={height} />
   );
 };
 
